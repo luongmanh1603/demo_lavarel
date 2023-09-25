@@ -51,6 +51,18 @@ class HomeController extends Controller
         session(["cart"=>$cart]);
         return redirect()->back()->with("success","da them vao gio hang thanh cong");
     }
+    public function cart(){
+        $cart = session()->has("cart")?session("cart"):[];
+        $subtotal = 0;
+        $can_checkout = true;
+        foreach ($cart as $item){
+            $subtotal += $item->price * $item->buy_qty;
+            if ($item->buy_qty > $item->qty)
+                $can_checkout = false;
+        }
+        $total = $subtotal*1.1;
+        return view("pages.cart",compact("cart","subtotal","total","can_checkout"));
+    }
     public function test(){
         return view("layouts.app");
     }
