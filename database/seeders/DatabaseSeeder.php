@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-        // \App\Models\Category::factory(10)->create();
-        //\App\Models\Product::factory(10)->create();
-      //  \App\Models\Order::factory(10)->create();
+        \App\Models\User::factory(10)->create();
+        \App\Models\Category::factory(10)->create();
+        \App\Models\Product::factory(10)->create();
+        \App\Models\Order::factory(10)->create();
    $orders = Order::all(); // select * from orders
         foreach ($orders as $order){
             $grand_total = 0;
