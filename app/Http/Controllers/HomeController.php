@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -86,7 +88,38 @@ class HomeController extends Controller
             "email"=>"required",
             "shipping_method"=>"required",
             "payment_method"=>"required"
+        ],[
+            "required"=>"vui long dien thong tin."
         ]);
+        //calculate
+        $cart = session()->has("cart")?session("cart"):[];
+        $subtotal = 0;
+        foreach ($cart as $item){
+            $subtotal += $item->price * $item->buy_qty;
+        }
+        $total = $subtotal*1.1;
+        $order = Order::create([
+           "grand_total"=>$total,
+           "full_name"=>$request->get("full_name"),
+            "email"=>$request->get("email"),
+            "tel"=>$request->get("tel"),
+            "address"=>$request->get("address"),
+            "shipping_method"=>$request->get("shipping_method"),
+            "payment_method"=>$request->get("payment_method")
+        ]);
+        foreach ($cart as $item){
+            DB::table("order_products")->insert([
+                "order_id"=>$order->id,
+                 "product_id"=>$item->id,
+                "qty"=>$item->buy_qty,
+                "price"=>$item->price
+            ]);
+            $product = Product::find($item->id);
+            $product->update(["qty"=>$product->qty - $item->buy_qty]);
+        }
+        //clear cart
+        session()->forget("cart");
+        return redirect()->to("thank-you")->with("order",$order);
     }
     public function test(){
         return view("layouts.app");

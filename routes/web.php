@@ -19,6 +19,7 @@ Route::get('/detail/{product:slug}', [\App\Http\Controllers\HomeController::clas
 Route::get('/add-to-cart/{product}', [\App\Http\Controllers\HomeController::class,"addToCart"]);
 Route::get('/cart', [\App\Http\Controllers\HomeController::class,"cart"]);
 Route::get('/checkout', [\App\Http\Controllers\HomeController::class,"checkout"]);
+Route::post('/checkout', [\App\Http\Controllers\HomeController::class,"placeOrder"]);
 
 
 Route::get('test', [\App\Http\Controllers\HomeController::class,"test"]);
