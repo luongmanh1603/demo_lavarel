@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string("shipping_method");
             $table->string("payment_method");
             $table->boolean("is_paid")->default(false);
-            $table->unsignedBigInteger("user_id");
+            $table->unsignedBigInteger("user_id")->nullable();
+            $table->string("email")->nullable();
             $table->foreign("user_id")->references("id")->on("users");
             $table->timestamps();
         });

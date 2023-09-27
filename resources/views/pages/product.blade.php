@@ -42,7 +42,7 @@
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="buy_qty" value="1">
+                                    <input  name="buy_qty" type="text" value="1">
                                 </div>
                             </div>
                         </div>
@@ -53,10 +53,10 @@
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
                             <li><b>Availability</b>
-                            @if($product->qty > 0)
-                                <span class="text-success">In Stock </span>
+                                @if($product->qty > 0)
+                                    <span class="text-success">In Stock </span>
                                 @else <span class="text-danger">Out of Stock</span>
-                            @endif
+                                @endif
                             </li>
                             <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
                             <li><b>Weight</b> <span>0.5 kg</span></li>
@@ -150,9 +150,9 @@
             </div>
             <div class="row">
                 @foreach($relateds as $item)
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="product__item">
-                       <div class="product__item__pic set-bg" data-setbg="{{$item->thumbnail}}"></div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" data-setbg="{{$item->thumbnail}}">
                             <ul class="product__item__pic__hover">
                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                 <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -164,9 +164,9 @@
                             <h5>{{$item->price}}</h5>
                         </div>
                     </div>
-                </div>
-            @endforeach
             </div>
+            @endforeach
+        </div>
         </div>
     </section>
 @endsection

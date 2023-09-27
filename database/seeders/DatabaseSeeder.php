@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Category::factory(10)->create();
         \App\Models\Product::factory(10)->create();
         \App\Models\Order::factory(10)->create();
-   $orders = Order::all(); // select * from orders
+        $orders = Order::all(); // select * from orders
         foreach ($orders as $order){
             $grand_total = 0;
             $product_count = random_int(1,5);
