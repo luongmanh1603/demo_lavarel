@@ -29,6 +29,8 @@
                 <form action="{{url("/add-to-cart",["product"=>$product->id])}}" method="get">
                     <div class="product__details__text">
                         <h3>{{$product->name}}</h3>
+                        <h5>Category: {{$product->Category->name}}</h5>
+                        <p>Đã bán: {{$product->Orders->count()}}</p>
                         <div class="product__details__rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>

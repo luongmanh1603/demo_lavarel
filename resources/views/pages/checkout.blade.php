@@ -15,8 +15,7 @@
                     <div class="col-lg-8 col-md-6">
                         <div class="checkout__input">
                             <p>Full Name<span>*</span></p>
-                            <input name="full_name" value="{{old("full_name")}}" type="text">
-                            @error("full_name")
+                            <input name="full_name" value="{{auth()?auth()->user()->name:old("full_name")}}" type="text">                            @error("full_name")
                             <p class="text-danger"><i>{{$message}}</i></p>
                             @enderror
                         </div>
@@ -40,8 +39,7 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Email<span>*</span></p>
-                                    <input value="{{old("email")}}" name="email" type="email">
-                                    @error("email")
+                                    <input value="{{auth()?auth()->user()->email:old("email")}}" name="email" type="email">                                    @error("email")
                                     <p class="text-danger"><i>{{$message}}</i></p>
                                     @enderror
                                 </div>

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreateNewOrder;
 use App\Http\Controllers\Controller;
+use App\Mail\OrderMail;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class HomeController extends Controller
 {
@@ -119,7 +123,64 @@ class HomeController extends Controller
         }
         //clear cart
         session()->forget("cart");
-        return redirect()->to("thank-you")->with("order",$order);
+        event(new CreateNewOrder($order));
+
+        //thanh toan bang paypal
+        if($order->payment_method == "Paypal"){
+            $provider = new PayPalClient;
+            $provider->setApiCredentials(config('paypal'));
+            $paypalToken = $provider->getAccessToken();
+
+            $response = $provider->createOrder([
+                "intent" => "CAPTURE",
+                "application_context" => [
+                    "return_url" => url("paypal-success",['order'=>$order]),
+                    "cancel_url" => url("paypal-cancel",['order'=>$order]),
+                ],
+                "purchase_units" => [
+                    0 => [
+                        "amount" => [
+                            "currency_code" => "USD",
+                            "value" => number_format($order->grand_total,2,".","") // 1234.45
+                        ]
+                    ]
+                ]
+            ]);
+
+            if (isset($response['id']) && $response['id'] != null) {
+
+                // redirect to approve href
+                foreach ($response['links'] as $links) {
+                    if ($links['rel'] == 'approve') {
+                        return redirect()->away($links['href']);
+                    }
+                }
+
+                return redirect()
+                    ->back()
+                    ->with('error', 'Something went wrong.');
+
+            } else {
+                return redirect()
+                    ->back()
+                    ->with('error', $response['message'] ?? 'Something went wrong.');
+            }
+        }
+        return redirect()->to("thank-you/$order->id");
+    }
+    public function  thankYou(Order $order){
+        return view("pages.thankyou",compact("order"));
+    }
+    public function paypalSuccess(Order $order){
+        $order->update([
+            "is_paid"=>true,
+            "status"=> Order::CONFIRMED
+        ]);// cập nhật trạng thái đã trả tiền
+
+        return redirect()->to("thank-you/$order->id");
+    }
+    public function paypalCancel(Order $order){
+        return redirect()->to("thank-you/$order->id");
     }
     public function test(){
         return view("layouts.app");
