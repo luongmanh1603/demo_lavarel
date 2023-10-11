@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+         \App\Models\User::factory()->create([
+             'name' => 'admin',
+             'email' => 'admin@gmail.com',
+             'password'=>bcrypt("12345678"),
+             'role'=>"ADMIN"
+         ]);
         \App\Models\User::factory(10)->create();
         \App\Models\Category::factory(10)->create();
         \App\Models\Product::factory(10)->create();
@@ -40,9 +47,6 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+
     }
 }
